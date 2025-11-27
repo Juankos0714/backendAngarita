@@ -18,12 +18,8 @@ public class CorsConfig {
         // Permitir credenciales
         config.setAllowCredentials(true);
         
-        // Orígenes permitidos
-        config.setAllowedOriginPatterns(Arrays.asList(
-            "http://localhost:4200",
-            "https://frontend-angarita.vercel.app",
-            "https://*.vercel.app"
-        ));
+// **MODIFICACIÓN 1: Usaremos '*' para prueba, o tu URL específica**
+        config.setAllowedOriginPatterns(Arrays.asList("*"));
         
         // Headers permitidos
         config.setAllowedHeaders(Arrays.asList(
@@ -44,9 +40,9 @@ public class CorsConfig {
             "OPTIONS"
         ));
         
-        // Aplicar a todas las rutas
+// **MODIFICACIÓN 2: Aplicar a todas las rutas '/**'**
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", config);
+        source.registerCorsConfiguration("/**", config);
         
         return new CorsFilter(source);
     }
