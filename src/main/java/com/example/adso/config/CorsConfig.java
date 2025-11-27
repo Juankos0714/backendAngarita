@@ -7,6 +7,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 public class CorsConfig {
@@ -18,21 +19,16 @@ public class CorsConfig {
         // Permitir credenciales
         config.setAllowCredentials(true);
         
-        // Orígenes permitidos (ajusta según tus dominios)
-        config.setAllowedOrigins(Arrays.asList(
-            "http://localhost:4200",
+        // IMPORTANTE: Usar allowedOriginPatterns en lugar de allowedOrigins
+        // Esto permite todos los subdominios de Vercel
+        config.setAllowedOriginPatterns(Arrays.asList(
+            "http://localhost:*",
+            "https://*.vercel.app",
             "https://frontend-angarita.vercel.app"
         ));
         
-        // Headers permitidos
-        config.setAllowedHeaders(Arrays.asList(
-            "Origin",
-            "Content-Type",
-            "Accept",
-            "Authorization",
-            "Access-Control-Request-Method",
-            "Access-Control-Request-Headers"
-        ));
+        // Headers permitidos - usar * para permitir todos
+        config.setAllowedHeaders(Collections.singletonList("*"));
         
         // Métodos permitidos
         config.setAllowedMethods(Arrays.asList(
@@ -40,16 +36,18 @@ public class CorsConfig {
             "POST",
             "PUT",
             "DELETE",
-            "OPTIONS"
+            "OPTIONS",
+            "PATCH"
         ));
         
         // Headers expuestos al cliente
         config.setExposedHeaders(Arrays.asList(
             "Authorization",
-            "Content-Type"
+            "Content-Type",
+            "X-Total-Count"
         ));
         
-        // Duración del caché de preflight
+        // Duración del caché de preflight (1 hora)
         config.setMaxAge(3600L);
         
         // Aplicar a todas las rutas

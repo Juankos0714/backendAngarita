@@ -2,8 +2,6 @@ package com.example.adso.config;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -12,11 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 
 /**
  * Configuración principal de Spring Security.
@@ -33,12 +26,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-        		.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // IMPORTANTE: Habilitar CORS antes que todo
+                // Usa la configuración del CorsFilter bean de CorsConfig
+                .cors(cors -> cors.configure(http))
+                
                 // Deshabilitamos CSRF (Cross-Site Request Forgery) porque usamos JWT (stateless)
                 .csrf(csrf -> csrf.disable())
 
                 // Definimos las reglas de autorización
                 .authorizeHttpRequests(authz -> authz
+                        // Permitir todas las peticiones OPTIONS (preflight CORS)
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() 
     
                         // Endpoints públicos (registro y login)
@@ -67,27 +64,5 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-    }
-    
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        
-        // Permitir el origen de Angular (ajusta el puerto si es necesario)
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); 
-        
-        // Permitir los métodos HTTP que usas (GET, POST, etc.)
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        
-        // Permitir las cabeceras, especialmente Authorization para el token JWT
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        
-        // Permitir credenciales si fuera necesario (opcional en JWT stateless, pero útil a veces)
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        // Aplicar esta configuración a todas las rutas
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
     }
 }
