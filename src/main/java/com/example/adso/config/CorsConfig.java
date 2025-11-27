@@ -1,4 +1,4 @@
-package com.ubik.config;
+package com.example.adso.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,7 +7,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
-import java.util.List; 
 
 @Configuration
 public class CorsConfig {
@@ -18,14 +17,12 @@ public class CorsConfig {
         
         // Permitir credenciales
         config.setAllowCredentials(true);
-        configuration.setAllowedOrigins(List.of(
-        "http://localhost:4200", 
-        "https://frontend-angarita.vercel.app", // Reemplaza con tu dominio real de Vercel
-        "https://backendangarita.duckdns.org"  // Añade tu propio dominio seguro
-    ));
         
-// **MODIFICACIÓN 1: Usaremos '*' para prueba, o tu URL específica**
-        config.setAllowedOriginPatterns(Arrays.asList("*"));
+        // Orígenes permitidos (ajusta según tus dominios)
+        config.setAllowedOrigins(Arrays.asList(
+            "http://localhost:4200",
+            "https://frontend-angarita.vercel.app"
+        ));
         
         // Headers permitidos
         config.setAllowedHeaders(Arrays.asList(
@@ -46,7 +43,16 @@ public class CorsConfig {
             "OPTIONS"
         ));
         
-// **MODIFICACIÓN 2: Aplicar a todas las rutas '/**'**
+        // Headers expuestos al cliente
+        config.setExposedHeaders(Arrays.asList(
+            "Authorization",
+            "Content-Type"
+        ));
+        
+        // Duración del caché de preflight
+        config.setMaxAge(3600L);
+        
+        // Aplicar a todas las rutas
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         
