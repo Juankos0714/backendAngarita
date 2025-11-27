@@ -19,9 +19,10 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         
         // Orígenes permitidos
-        config.setAllowedOrigins(Arrays.asList(
+        config.setAllowedOriginPatterns(Arrays.asList(
             "http://localhost:4200",
-            "https://frontend-angarita.vercel.app"
+            "https://frontend-angarita.vercel.app",
+            "https://*.vercel.app"
         ));
         
         // Headers permitidos
