@@ -17,6 +17,11 @@ public class CorsConfig {
         
         // Permitir credenciales
         config.setAllowCredentials(true);
+        configuration.setAllowedOrigins(List.of(
+        "http://localhost:4200", 
+        "https://frontend-angarita.vercel.app", // Reemplaza con tu dominio real de Vercel
+        "https://backendangarita.duckdns.org"  // Añade tu propio dominio seguro
+    ));
         
 // **MODIFICACIÓN 1: Usaremos '*' para prueba, o tu URL específica**
         config.setAllowedOriginPatterns(Arrays.asList("*"));

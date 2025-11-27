@@ -39,6 +39,8 @@ public class SecurityConfig {
 
                 // Definimos las reglas de autorización
                 .authorizeHttpRequests(authz -> authz
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() 
+    
                         // Endpoints públicos (registro y login)
                         .requestMatchers("/api/auth/**").permitAll()
                         
